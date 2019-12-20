@@ -1,0 +1,5 @@
+all_energy.json
+all_energy_statistics.csv
+*/__pycache__
+__pycache__/
+.ipynb_checkpoints

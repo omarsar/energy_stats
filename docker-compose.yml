@@ -1,0 +1,38 @@
+version: '2.2'
+services:
+  server1:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.5.0
+    container_name: server1
+    environment:
+      - node.name=node1
+      - discovery.seed_hosts=server1
+      - cluster.initial_master_nodes=node1
+      - xpack.security.enabled=false
+      - cluster.name=ds_cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - data01:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+    networks:
+      - net
+  kibana:
+    container_name: kibana
+    image: docker.elastic.co/kibana/kibana:7.5.0
+    environment:
+      - ELASTICSEARCH_HOSTS=http://server1:9200
+      - "XPACK_SECURITY_ENABLED=false"
+    ports:
+      - 5601:5601
+    networks:
+      - net
+volumes:
+  data01:
+    driver: local
+networks:
+  net:
